@@ -1,5 +1,7 @@
 package com.gerson.saude.clinica.controller;
 
+import com.gerson.saude.clinica.consulta.ConsultaRepository;
+import com.gerson.saude.clinica.consulta.MotivoCancelamento;
 import com.gerson.saude.clinica.medico.*;
 import com.gerson.saude.clinica.paciente.DadosListagemPaciente;
 import jakarta.transaction.Transactional;
@@ -7,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -17,6 +21,9 @@ public class MedicoController {
 
     @Autowired
     private MedicoRepository repository;
+
+    @Autowired // <--- Adicione isto
+    private ConsultaRepository consultaRepository; // <--- E isto
 
     @PostMapping
     @Transactional
@@ -41,11 +48,34 @@ public class MedicoController {
         medico.atualizarInformacoes(dados);
     }
 
-    @DeleteMapping("/{id}") // Define que o ID vem na URL, ex: /medicos/5
+//    @DeleteMapping("/{id}") // Define que o ID vem na URL, ex: /medicos/5
+//    @Transactional
+//    public void excluir(@PathVariable Long id) {
+//        var medico = repository.getReferenceById(id);
+//        medico.excluir(); // Chama o método que você acabou de criar na classe Medico!
+//    }
+
+    @DeleteMapping("/{id}")
     @Transactional
-    public void excluir(@PathVariable Long id) {
+    public ResponseEntity excluir(@PathVariable Long id) {
         var medico = repository.getReferenceById(id);
-        medico.excluir(); // Chama o método que você acabou de criar na classe Medico!
+        medico.excluir(); // Seta ativo = 0
+
+        // REGRA DE NEGÓCIO: Cancela todas as consultas futuras deste médico
+        // Busca as consultas e marca como canceladas por inatividade do médico
+        consultaRepository.cancelarConsultasFuturasDoMedico(id, LocalDateTime.now(), MotivoCancelamento.MEDICO_INATIVADO);
+
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @PutMapping("/{id}/reativar")
+    @Transactional
+    public ResponseEntity reativar(@PathVariable Long id) {
+        var medico = repository.getReferenceById(id);
+        medico.reativar(); // Vamos criar este método na Entidade agora
+
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content (Sucesso sem corpo)
     }
 
 }

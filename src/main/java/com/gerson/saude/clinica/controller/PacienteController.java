@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,6 +51,15 @@ public class PacienteController {
     public void excluir(@PathVariable Long id) {
         var paciente = repository.getReferenceById(id);
         paciente.excluir();
+    }
+
+    @PutMapping("/{id}/reativar")
+    @Transactional
+    public ResponseEntity reativar(@PathVariable Long id) {
+        var medico = repository.getReferenceById(id);
+        medico.reativar(); // Vamos criar este método na Entidade agora
+
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content (Sucesso sem corpo)
     }
 
 }

@@ -31,4 +31,21 @@ public class Consulta {
 
     private LocalDateTime data;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "motivo_cancelamento")
+    private MotivoCancelamento motivoCancelamento;
+
+
+    public Consulta(Long id, Medico medico, Paciente paciente, LocalDateTime data) {
+        this.id = id;
+        this.medico = medico;
+        this.paciente = paciente;
+        this.data = data;
+        this.motivoCancelamento = null; // Toda consulta nova começa ativa (null)
+    }
+
+    public void cancelar(MotivoCancelamento motivo) {
+        this.motivoCancelamento = motivo;
+    }
+
 }

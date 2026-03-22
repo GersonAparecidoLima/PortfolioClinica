@@ -58,5 +58,9 @@ public class Medico {
         this.ativo = false;
     }
 
+    public void reativar() {
+        this.ativo = true;
+    }
+
 
 }

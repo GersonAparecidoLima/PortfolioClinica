@@ -57,4 +57,8 @@ public class Paciente {
         this.ativo = false;
     }
 
+    public void reativar() {
+        this.ativo = true;
+    }
+
 }
