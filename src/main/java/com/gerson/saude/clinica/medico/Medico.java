@@ -42,17 +42,35 @@ public class Medico {
         this.endereco = new Endereco(dados.endereco());
     }
 
+//    public void atualizarInformacoes(DadosAtualizacaoMedico dados) {
+//        if (dados.nome() != null) {
+//            this.nome = dados.nome();
+//        }
+//           if (dados.endereco() != null) {
+//            this.endereco.atualizarInformacoes(dados.endereco());
+//        }
+//        if (dados.telefone() != null) {
+//            this.telefone = dados.telefone();
+//        }
+//    }
+
     public void atualizarInformacoes(DadosAtualizacaoMedico dados) {
         if (dados.nome() != null) {
             this.nome = dados.nome();
         }
-           if (dados.endereco() != null) {
+        // ADICIONE ESTAS LINHAS AQUI EMBAIXO:
+        if (dados.especialidade() != null) {
+            this.especialidade = dados.especialidade();
+        }
+        // ---------------------------------
+        if (dados.endereco() != null) {
             this.endereco.atualizarInformacoes(dados.endereco());
         }
         if (dados.telefone() != null) {
             this.telefone = dados.telefone();
         }
     }
+
 
     public void excluir() {
         this.ativo = false;

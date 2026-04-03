@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+@CrossOrigin(origins = "http://localhost:5173") // Libera o React
+@RequestMapping("/api/medicos")
 @RestController
-@RequestMapping("medicos")
+//@RequestMapping("medicos")
 public class MedicoController {
 
     @Autowired
@@ -37,9 +40,6 @@ public class MedicoController {
     public Page<DadosListagemMedico> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
         return repository.findAllByAtivoTrue(paginacao).map(DadosListagemMedico::new);
     }
-//        public List<DadosListagemMedico> listar() {
-//        return repository.findAll().stream().map(DadosListagemMedico::new).toList();
-//    }
 
     @PutMapping
     @Transactional
@@ -47,13 +47,6 @@ public class MedicoController {
         var medico  = repository.getReferenceById(dados.id());
         medico.atualizarInformacoes(dados);
     }
-
-//    @DeleteMapping("/{id}") // Define que o ID vem na URL, ex: /medicos/5
-//    @Transactional
-//    public void excluir(@PathVariable Long id) {
-//        var medico = repository.getReferenceById(id);
-//        medico.excluir(); // Chama o método que você acabou de criar na classe Medico!
-//    }
 
     @DeleteMapping("/{id}")
     @Transactional
@@ -68,7 +61,6 @@ public class MedicoController {
         return ResponseEntity.noContent().build();
     }
 
-
     @PutMapping("/{id}/reativar")
     @Transactional
     public ResponseEntity reativar(@PathVariable Long id) {
@@ -76,6 +68,13 @@ public class MedicoController {
         medico.reativar(); // Vamos criar este método na Entidade agora
 
         return ResponseEntity.noContent().build(); // Retorna 204 No Content (Sucesso sem corpo)
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity detalhar(@PathVariable Long id) {
+        var medico = repository.getReferenceById(id);
+        // Certifique-se de que está devolvendo o novo DTO que você criou!
+        return ResponseEntity.ok(new DadosDetalhamentoMedico(medico));
     }
 
 }
