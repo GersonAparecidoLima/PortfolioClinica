@@ -17,8 +17,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
-@CrossOrigin(origins = "http://localhost:5173") // Libera o React
-@RequestMapping("/api/medicos")
+//@CrossOrigin(origins = "http://localhost:5173") // Libera o React
+//@RequestMapping("/api/medicos")
+@RequestMapping("medicos")
 @RestController
 //@RequestMapping("medicos")
 public class MedicoController {

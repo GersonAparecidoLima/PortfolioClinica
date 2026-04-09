@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//@CrossOrigin(origins = "http://localhost:5173") // Libera o React
 @RestController
 @RequestMapping("pacientes")
 
@@ -53,13 +54,23 @@ public class PacienteController {
         paciente.excluir();
     }
 
+//    @PutMapping("/{id}/reativar")
+//    @Transactional
+//    public ResponseEntity reativar(@PathVariable Long id) {
+//        var medico = repository.getReferenceById(id);
+//        medico.reativar(); // Vamos criar este método na Entidade agora
+//
+//        return ResponseEntity.noContent().build(); // Retorna 204 No Content (Sucesso sem corpo)
+//    }
+
     @PutMapping("/{id}/reativar")
     @Transactional
     public ResponseEntity reativar(@PathVariable Long id) {
-        var medico = repository.getReferenceById(id);
-        medico.reativar(); // Vamos criar este método na Entidade agora
+        var paciente = repository.getReferenceById(id); // Alterado de medico para paciente
+        paciente.reativar();
 
-        return ResponseEntity.noContent().build(); // Retorna 204 No Content (Sucesso sem corpo)
+        return ResponseEntity.noContent().build();
     }
+
 
 }
